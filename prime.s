@@ -52,7 +52,16 @@ gcd:
 
 	# TO DO: write this function
 
-	xorq	%rax, %rax
+	cmpq $0, %rsi
+	je ret
+	call modulo
+	movq %rsi, %rdi
+	movq %rax, %rsi
+	call gcd
+	retq
+
+ret:
+	movq %rdi, %rax
 	retq
 
 ############################################################
@@ -70,7 +79,22 @@ prime:
 
 	# TO DO: write this function
 
-	xorq	%rax, %rax
+	movq $1, %rsi
+loop_start_prime:
+	addq $1, %rsi
+	cmpq %rdi, %rsi
+	jns ret_1_prime
+	pushq %rdi
+	pushq %rsi
+	call gcd
+	popq %rsi
+	popq %rdi
+	cmp $1, %rax
+	je loop_start_prime
+	xorq %rax, %rax
+	retq
+ret_1_prime:
+	movq $1, %rax
 	retq
 
 ############################################################
